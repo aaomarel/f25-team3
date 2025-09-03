@@ -2,4 +2,4 @@
 CSC 340 semester project by Ahmed and Keith
 
 Ahmed Omar Eltai
-keith Lonon
+Keith Lonon
