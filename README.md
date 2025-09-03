@@ -3,3 +3,18 @@ CSC 340 semester project by Ahmed and Keith
 
 Ahmed Omar Eltai
 Keith Lonon
+
+## Description 
+> The product will offer a service to people wanting to find pick up games for either soccer or basketball. We were motivated by our shared passion of recreational sports and the understanding of how hard it can be to get people together to play, especially if you don't know many people. This app aims to remove that obstacle.
+
+## App Functions
+1. Customer (the user with the customer role):
+    1. Create/modify customer profile - <how will your app do this?>
+    2. View available services - <how will your app do this?>.
+    3. Subscribe to available services - <how will your app do this?>.
+    4. Write reviews for subscribed services - <how will your app do this?>.
+2. Provider:
+    1. Create a user profile - All users must create a profile 
+    2. Create game instances - The provider will have the ability to create game instances 
+    3. Designate play locations and time periods - The provider will be responsible for choosing locations to play and what times
+ 
