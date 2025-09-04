@@ -14,7 +14,7 @@ Keith Lonon
     3. Subscribe to available services - <how will your app do this?>.
     4. Write reviews for subscribed services - <how will your app do this?>.
 2. Provider:
-    1. Create a user profile - All users must create a profile 
-    2. Create game instances - The provider will have the ability to create game instances 
-    3. Designate play locations and time periods - The provider will be responsible for choosing locations to play and what times
+    1. Create a user profile - All users must create a profile, and all profiles have the ability to either join or create a game instance.
+    2. Create game instances - The provider will have the ability to create game instances if no games that have already been created.
+    3. Designate play locations and time periods - The provider will be responsible for choosing locations to play and what times. The option to create a game instance will appear for anyone if they find an open slot, and the time/location slots will be pre-determined. 
  
