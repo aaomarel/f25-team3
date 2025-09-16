@@ -12,7 +12,6 @@ Keith Lonon
     1. Create/modify customer profile - user opens app and hits register and fills in required slots name and email
     2. View available services - once you are register a screen will pop up with two sports soccer/basketball and when you click on the sport a location and time slots will pop up with a option to start or join a game if you hit start a game you get a display screen that shows you two locations where you can select what time you want to play and how many players they want on each team. now if you click on join you be able to pick bewteen locations and you will be able to see how many players are in the game and where the player cap is the user would also be able to select what team they would want to join
     3. Subscribe to available services - so the user would be able to subscribe to play on the competitive basketball court and with this Subscription we would have a leaderbroad that would ranked the players based on how they play
-    4. Write reviews for subscribed services - the customer will also be able to write reveiws based on how a think the game went and can report other players on the if necessary.
 
 
 2. Provider:
