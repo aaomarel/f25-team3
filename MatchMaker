@@ -93,6 +93,9 @@ This section specifies the software product's requirements to a level of detail 
 **Description:**
 Providers are users who can create pick-up matches. They are responsible for specifying the sport, location, player capacity, and time of play for each match.
 
+#### 3.1.y Customer/Player Use Case (Author: Keith Lonon)
+**Description:**
+
 **Functional Requirements:**
 * The system shall allow a provider to create a new pick-up match by entering the sport, location, player capacity, and time of play.
 * The system shall require all fields (sport, location, player capacity, time) to be filled before a match can be created.
