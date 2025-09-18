@@ -95,7 +95,7 @@ Providers are users who can create pick-up matches. They are responsible for spe
 
 #### 3.1.y Customer/Player Use Case (Author: Keith Lonon)
 **Description:**
-Customer/players are user who can create/join pick -ups matches.they can also pick the time slot to decide what time there game start they can also cancel games if they dont want that time slot anymore.
+Customer/players are user who can create/join pick -ups matches. they can also pick the time slot to decide what time there game start they can also cancel games if they dont want that time slot anymore.
 **Functional Requirements:**
 * The system shall allow a provider to create a new pick-up match by entering the sport, location, player capacity, and time of play.
 * The system shall require all fields (sport, location, player capacity, time) to be filled before a match can be created.
