@@ -17,26 +17,26 @@
     <main>
         <form action="my-hosted-games.html">
             <label>Sport:
-                <select>
-                    <option>Soccer</option>
-                    <option>Basketball</option>
-                    <option>Tennis</option>
+                <select id="sport" name="sport">
+                    <option value="Basketball">Basketball</option>
+                    <option value="Soccer">Soccer</option>
                 </select>
             </label>
             <label>Location:
-                <input type="text" placeholder="Enter location" required>
+                <select id="location" name="location"></select>
             </label>
             <label>Date:
-                <input type="date" required>
+                <input type="date" name="date" required>
             </label>
             <label>Time:
-                <input type="time" required>
+                <select id="time" name="time"></select>
             </label>
-            <label>Player Limit:
-                <input type="number" min="2" max="30" value="10" required>
+            <label>Player Slots:
+                <select id="player-limit" name="player-limit"></select>
             </label>
             <button type="submit">Create Game</button>
         </form>
+        <script src="../scripts/create-game.js"></script>
     </main>
     <footer>
         <p>&copy; 2025 MatchMaker</p>
