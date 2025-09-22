@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Game - MatchMaker</title>
+    <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+    <header>
+        <h1>Create New Game</h1>
+        <nav>
+            <a href="my-hosted-games.html">My Hosted Games</a>
+            <a href="../dashboard.html">Dashboard</a>
+        </nav>
+    </header>
+    <main>
+        <form action="my-hosted-games.html">
+            <label>Sport:
+                <select>
+                    <option>Soccer</option>
+                    <option>Basketball</option>
+                    <option>Tennis</option>
+                </select>
+            </label>
+            <label>Location:
+                <input type="text" placeholder="Enter location" required>
+            </label>
+            <label>Date:
+                <input type="date" required>
+            </label>
+            <label>Time:
+                <input type="time" required>
+            </label>
+            <label>Player Limit:
+                <input type="number" min="2" max="30" value="10" required>
+            </label>
+            <button type="submit">Create Game</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2025 MatchMaker</p>
+    </footer>
+</body>
+</html>
