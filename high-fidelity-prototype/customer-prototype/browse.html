@@ -1,0 +1,47 @@
+browse.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Browse Games</title>
+  <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+  <header>
+    <h1>Available Games</h1>
+    <nav>
+      <a href="my-games.html">My Joined Games</a> |
+      <a href="leaderboard.html">Leaderboard</a> |
+      <a href="../dashboard.html">Dashboard</a>
+    </nav>
+  </header>
+
+  <section>
+    <label>Filter by Sport:
+      <select>
+        <option>All</option>
+        <option>Basketball</option>
+        <option>Soccer</option>
+        
+      </select>
+    </label>
+    <input type="search" placeholder="Search by location or name">
+  </section>
+
+  <main>
+    <div class="game-card">
+      <h3>Pickup Basketball</h3>
+      <p>Location: Kaplan Gym </p>
+      <p>Time: Sat 4 PM</p>
+      <a class="btn" href="game-details.html">View Details</a>
+    </div>
+
+    <div class="game-card">
+      <h3>Soccer Scrimmage</h3>
+      <p>Location: Rec Field</p>
+      <p>Time: Sun 10 AM</p>
+      <a class="btn" href="game-details.html">View Details</a>
+    </div>
+  </main>
+</body>
+</html>
