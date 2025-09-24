@@ -64,7 +64,6 @@ header h1 {
 }
 
 header h1::after {
-    content: '⚽';
     margin-left: 0.5rem;
     font-size: 0.8em;
 }
@@ -381,6 +380,13 @@ footer {
     transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
+    display: block;
+}
+
+.feature-link {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
 }
 
 .feature::before {
@@ -403,6 +409,10 @@ footer {
     transform: translateY(-6px);
     box-shadow: var(--shadow-hover);
     border-color: var(--primary);
+}
+
+.feature:active {
+    transform: translateY(-4px);
 }
 
 .feature h3 {
