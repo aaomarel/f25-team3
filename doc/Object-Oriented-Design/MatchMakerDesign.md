@@ -23,6 +23,7 @@ Table of Contents
 | ---- | ------- | ------------------- | --------- |
 | Ahmed Omar | 10/21/2025 | Initial Design | 1 |
 | | | | |
+| Keith Lonon | 10/21/2025| Initial Design | 1 |
 | | | | |
 
 ## 1. Product Overview
@@ -37,7 +38,7 @@ Table of Contents
 
 
 #### 2.2.1 Actor: Provider (Author: Keith Lonon)
-
+the provider has the ability to select what sport they want to start a game for and also the time it takes place
 
 ##### 2.2.1.1 Create Profile
 All users must create a profile with their name and email. All profiles have the ability to either join or create a game instance.
