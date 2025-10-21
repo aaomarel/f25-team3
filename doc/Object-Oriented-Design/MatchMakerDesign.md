@@ -36,8 +36,8 @@ Table of Contents
 ### 2.2 Use Case Descriptions
 
 
-#### 2.2.1 Actor: Provider (Author: Ahmed Omar)
-[cite_start]Providers are users who create and manage pick-up matches[cite: 13, 21].
+#### 2.2.1 Actor: Provider (Author: Keith Lonon)
+
 
 ##### 2.2.1.1 Create Profile
 All users must create a profile with their name and email. All profiles have the ability to either join or create a game instance.
@@ -48,8 +48,8 @@ All users must create a profile with their name and email. All profiles have the
 ##### 2.2.1.3 View Created Matches
 [cite_start]The system shall allow providers to view a list of matches they have created. [cite: 28] [cite_start]The system shall display a confirmation to the provider after successfully creating a match. [cite: 27]
 
-#### 2.2.2 Actor: Customer/Player (Author: Keith Lonon)
-[cite_start]Customers/players are users who can create or join pick-up matches[cite: 23].
+#### 2.2.2 Actor: Customer/Player (Author: Ahmed Omar)
+[cite_start]Customers/players are users who can join pick-up matches[cite: 23].
 
 ##### 2.2.2.1 Create/Modify Profile
 A user registers by opening the app and filling in required slots for their name and email.
