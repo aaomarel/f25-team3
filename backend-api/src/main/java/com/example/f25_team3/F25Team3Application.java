@@ -1,4 +1,4 @@
-package com.example.f25_team3;
+ package com.example.f25_team3;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
