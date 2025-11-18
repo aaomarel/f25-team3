@@ -7,37 +7,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const locations = {
         'Basketball': [
-            'Outdoor Courts 1',
-            'Outdoor Courts 2',
-            'Outdoor Courts 3',
-            'Kaplan Upstairs Court 1',
-            'Kaplan Upstairs Court 2',
-            'Kaplan Upstairs Court 3',
-            'Kaplan Downstairs Court 1'
+            { name: 'Outdoor Courts 1', times: ['6:00pm', '7:00pm', '8:00pm'] },
+            { name: 'Outdoor Courts 2', times: ['7:00pm', '8:00pm', '9:00pm'] },
+            { name: 'Outdoor Courts 3', times: ['6:00pm', '9:00pm'] },
+            { name: 'Kaplan Upstairs Court 1', times: ['6:00pm', '7:00pm'] },
+            { name: 'Kaplan Upstairs Court 2', times: ['8:00pm', '9:00pm'] },
+            { name: 'Kaplan Upstairs Court 3', times: ['6:00pm', '8:00pm'] },
+            { name: 'Kaplan Downstairs Court 1', times: ['7:00pm', '9:00pm'] }
         ],
         'Soccer': [
-            'Rec Field',
-            'Indoor Kaplan Court 1',
-            'Indoor Kaplan Court 2'
+            { name: 'Rec Field', times: ['6:00pm', '7:00pm', '8:00pm', '9:00pm'] },
+            { name: 'Indoor Kaplan Court 1', times: ['7:00pm', '8:00pm'] },
+            { name: 'Indoor Kaplan Court 2', times: ['6:00pm', '9:00pm'] }
         ]
     };
 
     const playerLimits = {
-        'Basketball': [4,6,8,10],
-        'Soccer': [4,6,8,10,12,14]
+        'Basketball': [4, 6, 8, 10],
+        'Soccer': [4, 6, 8, 10, 12, 14]
     };
-
-    const times = ['6:00pm', '7:00pm', '8:00pm', '9:00pm'];
 
     function updateLocations() {
         const sport = sportSelect.value;
         locationSelect.innerHTML = '';
         (locations[sport] || []).forEach(loc => {
             const opt = document.createElement('option');
-            opt.value = loc;
-            opt.textContent = loc;
+            opt.value = loc.name;
+            opt.textContent = loc.name;
             locationSelect.appendChild(opt);
         });
+        updateTimes(); // Update times when locations change
     }
 
     function updatePlayerLimits() {
@@ -51,14 +50,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function populateTimes() {
+    function updateTimes() {
+        const sport = sportSelect.value;
+        const locationName = locationSelect.value;
+        const locationData = (locations[sport] || []).find(loc => loc.name === locationName);
+        
         timeSelect.innerHTML = '';
-        times.forEach(t => {
-            const opt = document.createElement('option');
-            opt.value = t;
-            opt.textContent = t;
-            timeSelect.appendChild(opt);
-        });
+        if (locationData) {
+            locationData.times.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t;
+                opt.textContent = t;
+                timeSelect.appendChild(opt);
+            });
+        }
     }
 
     // Disable weekends in the date picker
@@ -78,8 +83,9 @@ document.addEventListener('DOMContentLoaded', function() {
         updatePlayerLimits();
     });
 
+    locationSelect.addEventListener('change', updateTimes);
+
     // Initial population
     updateLocations();
     updatePlayerLimits();
-    populateTimes();
 });

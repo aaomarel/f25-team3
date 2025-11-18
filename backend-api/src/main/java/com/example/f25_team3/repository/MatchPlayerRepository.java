@@ -6,9 +6,9 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MatchPlayerRepository extends JpaRepository<MatchPlayer, Integer> {
-    Optional<MatchPlayer> findByMatchIdAndUserId(Integer matchId, Integer userId);
+    Optional<MatchPlayer> findByMatchIdAndUserId(Long matchId, Integer userId);
 
     List<MatchPlayer> findByUserId(Integer userId);
 
-    long countByMatchId(Integer matchId);
+    long countByMatchId(Long matchId);
 }
