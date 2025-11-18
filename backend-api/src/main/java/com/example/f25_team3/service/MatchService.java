@@ -1,13 +1,14 @@
 package com.example.f25_team3.service;
 
+import com.example.f25_team3.dto.MatchUpdateRequest;
 import com.example.f25_team3.entity.Match;
 import com.example.f25_team3.entity.MatchStatus;
-import com.example.f25_team3.entity.User;
 import com.example.f25_team3.repository.MatchPlayerRepository;
 import com.example.f25_team3.repository.MatchRepository;
 import com.example.f25_team3.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -30,54 +31,66 @@ public class MatchService {
     }
 
     @Transactional
-    public Match createMatch(Integer creatorId, Match match) {
-        User creator = userRepository.findById(creatorId)
-            .orElseThrow(() -> new EntityNotFoundException("Creator not found"));
+    public Match createMatch(Match match, Integer creatorId) {
+        if (creatorId == null) {
+            throw new IllegalArgumentException("Creator ID is required");
+        }
+        var creator = userRepository.findById(creatorId)
+            .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + creatorId));
         match.setCreator(creator);
         match.setStatus(MatchStatus.SCHEDULED);
         return matchRepository.save(match);
     }
 
-    public Match getMatch(Integer matchId) {
+    public Match getMatch(Long matchId) {
         return matchRepository.findById(matchId)
             .orElseThrow(() -> new EntityNotFoundException("Match not found"));
-    }
-
-    public List<Match> getMatchesForProvider(Integer providerId) {
-        return matchRepository.findByCreatorId(providerId);
     }
 
     public List<Match> getAvailableMatches(Optional<String> sportFilter) {
         if (sportFilter.isPresent()) {
             return matchRepository.findBySportIgnoreCaseAndStatus(sportFilter.get(), MatchStatus.SCHEDULED);
         }
-        return matchRepository.findUpcomingByStatus(MatchStatus.SCHEDULED, LocalDateTime.now());
+        return matchRepository.findUpcomingByStatus(MatchStatus.SCHEDULED, LocalDate.now(), LocalTime.now());
+    }
+
+    public List<Match> getMatchesCreatedByUser(Integer userId) {
+        return matchRepository.findByCreatorId(userId);
     }
 
     @Transactional
-    public Match updateMatch(Integer matchId, Match updated) {
+    public Match updateMatch(Long matchId, MatchUpdateRequest updated) {
         Match existing = getMatch(matchId);
+        if (updated.getTitle() != null) {
+            existing.setTitle(updated.getTitle());
+        }
+        if (updated.getDescription() != null) {
+            existing.setDescription(updated.getDescription());
+        }
         if (updated.getSport() != null) {
             existing.setSport(updated.getSport());
         }
         if (updated.getLocation() != null) {
             existing.setLocation(updated.getLocation());
         }
-        if (updated.getTimeOfPlay() != null) {
-            existing.setTimeOfPlay(updated.getTimeOfPlay());
+        if (updated.getDate() != null) {
+            existing.setDate(updated.getDate());
         }
-        if (updated.getPlayerCapacity() != null) {
+        if (updated.getTime() != null) {
+            existing.setTime(updated.getTime());
+        }
+        if (updated.getPlayerLimit() != null) {
             long currentPlayers = matchPlayerRepository.countByMatchId(matchId);
-            if (updated.getPlayerCapacity() < currentPlayers) {
+            if (updated.getPlayerLimit() < currentPlayers) {
                 throw new IllegalArgumentException("Capacity cannot be less than current players");
             }
-            existing.setPlayerCapacity(updated.getPlayerCapacity());
+            existing.setPlayerLimit(updated.getPlayerLimit());
         }
         return matchRepository.save(existing);
     }
 
     @Transactional
-    public Match startMatch(Integer matchId) {
+    public Match startMatch(Long matchId) {
         Match match = getMatch(matchId);
         if (match.getStatus() == MatchStatus.CANCELLED) {
             throw new IllegalStateException("Cannot start a cancelled match");
@@ -87,7 +100,7 @@ public class MatchService {
     }
 
     @Transactional
-    public Match cancelMatch(Integer matchId) {
+    public Match cancelMatch(Long matchId) {
         Match match = getMatch(matchId);
         match.setStatus(MatchStatus.CANCELLED);
         return matchRepository.save(match);

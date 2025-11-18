@@ -29,7 +29,7 @@ public class MatchPlayerService {
     }
 
     @Transactional
-    public MatchPlayer joinMatch(Integer matchId, Integer userId) {
+    public MatchPlayer joinMatch(Long matchId, Integer userId) {
         Match match = matchRepository.findById(matchId)
             .orElseThrow(() -> new EntityNotFoundException("Match not found"));
         if (match.getStatus() != MatchStatus.SCHEDULED) {
@@ -44,7 +44,7 @@ public class MatchPlayerService {
         });
 
         long currentCount = matchPlayerRepository.countByMatchId(matchId);
-        if (match.getPlayerCapacity() != null && currentCount >= match.getPlayerCapacity()) {
+        if (currentCount >= match.getPlayerLimit()) {
             throw new IllegalStateException("Match has reached its capacity");
         }
 
@@ -55,7 +55,7 @@ public class MatchPlayerService {
     }
 
     @Transactional
-    public void leaveMatch(Integer matchId, Integer userId) {
+    public void leaveMatch(Long matchId, Integer userId) {
         MatchPlayer matchPlayer = matchPlayerRepository.findByMatchIdAndUserId(matchId, userId)
             .orElseThrow(() -> new IllegalArgumentException("User is not part of this match"));
         matchPlayerRepository.delete(matchPlayer);
@@ -67,7 +67,7 @@ public class MatchPlayerService {
             .toList();
     }
 
-    public long countPlayersForMatch(Integer matchId) {
+    public long countPlayersForMatch(Long matchId) {
         return matchPlayerRepository.countByMatchId(matchId);
     }
 }

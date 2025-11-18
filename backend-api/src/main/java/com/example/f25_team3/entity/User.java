@@ -30,19 +30,21 @@ public class User {
     @Column(nullable = false)
     private String name;
 
+    @Column(unique = true, nullable = false, length = 100)
+    private String username;
+
     @Column(nullable = false, length = 255)
     private String email;
 
     @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
 
+    @Column(nullable = false, length = 255)
+    private String password;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private UserRole role;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Match> createdMatches = new HashSet<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -88,8 +90,20 @@ public class User {
         this.role = role;
     }
 
-    public Set<Match> getCreatedMatches() {
-        return createdMatches;
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Set<MatchPlayer> getMatchPlayers() {

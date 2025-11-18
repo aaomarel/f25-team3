@@ -2,45 +2,58 @@ package com.example.f25_team3.dto;
 
 import com.example.f25_team3.entity.Match;
 import com.example.f25_team3.entity.MatchStatus;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class MatchResponse {
-    private Integer id;
-    private Integer creatorId;
+    private Long id;
+    private String title;
+    private String description;
     private String sport;
     private String location;
-    private LocalDateTime timeOfPlay;
-    private Integer playerCapacity;
+    private LocalDate date;
+    private LocalTime time;
+    private int playerLimit;
     private MatchStatus status;
     private long playersJoined;
 
     public static MatchResponse fromEntity(Match match, long playersJoined) {
         MatchResponse response = new MatchResponse();
         response.setId(match.getId());
-        response.setCreatorId(match.getCreator() != null ? match.getCreator().getId() : null);
+        response.setTitle(match.getTitle());
+        response.setDescription(match.getDescription());
         response.setSport(match.getSport());
         response.setLocation(match.getLocation());
-        response.setTimeOfPlay(match.getTimeOfPlay());
-        response.setPlayerCapacity(match.getPlayerCapacity());
+        response.setDate(match.getDate());
+        response.setTime(match.getTime());
+        response.setPlayerLimit(match.getPlayerLimit());
         response.setStatus(match.getStatus());
         response.setPlayersJoined(playersJoined);
         return response;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getCreatorId() {
-        return creatorId;
+    public String getTitle() {
+        return title;
     }
 
-    public void setCreatorId(Integer creatorId) {
-        this.creatorId = creatorId;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getSport() {
@@ -59,20 +72,28 @@ public class MatchResponse {
         this.location = location;
     }
 
-    public LocalDateTime getTimeOfPlay() {
-        return timeOfPlay;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setTimeOfPlay(LocalDateTime timeOfPlay) {
-        this.timeOfPlay = timeOfPlay;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    public Integer getPlayerCapacity() {
-        return playerCapacity;
+    public LocalTime getTime() {
+        return time;
     }
 
-    public void setPlayerCapacity(Integer playerCapacity) {
-        this.playerCapacity = playerCapacity;
+    public void setTime(LocalTime time) {
+        this.time = time;
+    }
+
+    public int getPlayerLimit() {
+        return playerLimit;
+    }
+
+    public void setPlayerLimit(int playerLimit) {
+        this.playerLimit = playerLimit;
     }
 
     public MatchStatus getStatus() {

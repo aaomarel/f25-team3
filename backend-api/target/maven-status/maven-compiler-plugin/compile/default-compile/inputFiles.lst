@@ -1,4 +1,6 @@
 /Users/ahmedomar/Documents/f2025-team3/f25-team3/backend-api/src/main/java/com/example/f25_team3/F25Team3Application.java
+/Users/ahmedomar/Documents/f2025-team3/f25-team3/backend-api/src/main/java/com/example/f25_team3/config/SecurityConfig.java
+/Users/ahmedomar/Documents/f2025-team3/f25-team3/backend-api/src/main/java/com/example/f25_team3/config/WebConfig.java
 /Users/ahmedomar/Documents/f2025-team3/f25-team3/backend-api/src/main/java/com/example/f25_team3/controller/MatchController.java
 /Users/ahmedomar/Documents/f2025-team3/f25-team3/backend-api/src/main/java/com/example/f25_team3/controller/RestExceptionHandler.java
 /Users/ahmedomar/Documents/f2025-team3/f25-team3/backend-api/src/main/java/com/example/f25_team3/controller/UserController.java
@@ -7,6 +9,7 @@
 /Users/ahmedomar/Documents/f2025-team3/f25-team3/backend-api/src/main/java/com/example/f25_team3/dto/MatchRequest.java
 /Users/ahmedomar/Documents/f2025-team3/f25-team3/backend-api/src/main/java/com/example/f25_team3/dto/MatchResponse.java
 /Users/ahmedomar/Documents/f2025-team3/f25-team3/backend-api/src/main/java/com/example/f25_team3/dto/MatchUpdateRequest.java
+/Users/ahmedomar/Documents/f2025-team3/f25-team3/backend-api/src/main/java/com/example/f25_team3/dto/UserDto.java
 /Users/ahmedomar/Documents/f2025-team3/f25-team3/backend-api/src/main/java/com/example/f25_team3/dto/UserRequest.java
 /Users/ahmedomar/Documents/f2025-team3/f25-team3/backend-api/src/main/java/com/example/f25_team3/dto/UserResponse.java
 /Users/ahmedomar/Documents/f2025-team3/f25-team3/backend-api/src/main/java/com/example/f25_team3/entity/Match.java
@@ -17,6 +20,7 @@
 /Users/ahmedomar/Documents/f2025-team3/f25-team3/backend-api/src/main/java/com/example/f25_team3/repository/MatchPlayerRepository.java
 /Users/ahmedomar/Documents/f2025-team3/f25-team3/backend-api/src/main/java/com/example/f25_team3/repository/MatchRepository.java
 /Users/ahmedomar/Documents/f2025-team3/f25-team3/backend-api/src/main/java/com/example/f25_team3/repository/UserRepository.java
+/Users/ahmedomar/Documents/f2025-team3/f25-team3/backend-api/src/main/java/com/example/f25_team3/service/CustomUserDetailsService.java
 /Users/ahmedomar/Documents/f2025-team3/f25-team3/backend-api/src/main/java/com/example/f25_team3/service/MatchPlayerService.java
 /Users/ahmedomar/Documents/f2025-team3/f25-team3/backend-api/src/main/java/com/example/f25_team3/service/MatchService.java
 /Users/ahmedomar/Documents/f2025-team3/f25-team3/backend-api/src/main/java/com/example/f25_team3/service/UserService.java

@@ -27,6 +27,10 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiError> handleGeneric(Exception ex) {
+        System.err.println("=== UNHANDLED EXCEPTION ===");
+        System.err.println("Exception type: " + ex.getClass().getName());
+        System.err.println("Exception message: " + ex.getMessage());
+        ex.printStackTrace();
         return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error occurred");
     }
 
