@@ -37,7 +37,7 @@ Table of Contents
 ### 2.2 Use Case Descriptions
 
 
-#### 2.2.1 Actor: Provider (Author: Keith Lonon)
+#### 2.2.1 Actor: Provider (Author: Ahmed Omar)
 the provider has the ability to select what sport they want to start a game for and also the time it takes place
 
 ##### 2.2.1.1 Create Profile
@@ -49,7 +49,7 @@ All users must create a profile with their name and email. All profiles have the
 ##### 2.2.1.3 View Created Matches
 [cite_start]The system shall allow providers to view a list of matches they have created. [cite: 28] [cite_start]The system shall display a confirmation to the provider after successfully creating a match. [cite: 27]
 
-#### 2.2.2 Actor: Customer/Player (Author: Ahmed Omar)
+#### 2.2.2 Actor: Customer/Player (Author: Keith Lonon)
 [cite_start]Customers/players are users who can join pick-up matches[cite: 23].
 
 ##### 2.2.2.1 Create/Modify Profile
