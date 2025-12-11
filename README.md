@@ -18,3 +18,161 @@ Keith Lonon
     1. Create a user profile - All users must create a profile, and all profiles have the ability to either join or create a game instance.
     2. Create game instances - The provider will have the ability to create game instances if no games that have already been created.
     3. Designate play locations and time periods - The provider will be responsible for choosing locations to play and what times. The option to create a game instance will appear for anyone if they find an open slot, and the time/location slots will be pre-determined. 
+
+## Prerequisites
+
+Before running the project, ensure you have the following installed:
+
+- **Java 17** or higher (JDK)
+- **Maven** 3.6 or higher
+- **Node.js** 18 or higher
+- **npm** or **yarn**
+- **PostgreSQL** 12 or higher
+
+## Database Setup
+
+1. Install PostgreSQL if you haven't already
+2. Create a new database for the project:
+   ```sql
+   CREATE DATABASE matchmaker;
+   ```
+3. Update the database configuration in `backend-api/src/main/resources/application.properties`:
+   ```properties
+   spring.datasource.url=jdbc:postgresql://localhost:5432/matchmaker
+   spring.datasource.username=your_username
+   spring.datasource.password=your_password
+   ```
+
+## Running the Project
+
+### Backend (Spring Boot)
+
+1. Navigate to the backend directory:
+   ```bash
+   cd backend-api
+   ```
+
+2. Install dependencies and build the project:
+   ```bash
+   ./mvnw clean install
+   ```
+   Or on Windows:
+   ```bash
+   mvnw.cmd clean install
+   ```
+
+3. Run the Spring Boot application:
+   ```bash
+   ./mvnw spring-boot:run
+   ```
+   Or on Windows:
+   ```bash
+   mvnw.cmd spring-boot:run
+   ```
+
+   The backend API will start on **http://localhost:8080**
+
+### Frontend (React + Vite)
+
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+   The frontend application will start on **http://localhost:5173**
+
+## Running Both Servers Simultaneously
+
+To run the entire application, you'll need two terminal windows:
+
+**Terminal 1 - Backend:**
+```bash
+cd backend-api
+./mvnw spring-boot:run
+```
+
+**Terminal 2 - Frontend:**
+```bash
+cd frontend
+npm run dev
+```
+
+Then open your browser and navigate to **http://localhost:5173**
+
+## Project Structure
+
+```
+f25-team3/
+├── backend-api/          # Spring Boot backend
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/    # Java source files
+│   │   │   └── resources/
+│   │   └── test/
+│   └── pom.xml          # Maven configuration
+├── frontend/            # React frontend
+│   ├── src/
+│   │   ├── components/  # React components
+│   │   └── assets/
+│   ├── package.json
+│   └── vite.config.js
+└── doc/                 # Documentation
+```
+
+## Default Ports
+
+- **Backend API:** http://localhost:8080
+- **Frontend:** http://localhost:5173
+- **Database:** localhost:5432
+
+## Troubleshooting
+
+### Backend Issues
+
+- **Port 8080 already in use:** Change the port in `application.properties`:
+  ```properties
+  server.port=8081
+  ```
+  
+- **Database connection error:** Verify PostgreSQL is running and credentials are correct
+
+### Frontend Issues
+
+- **Port 5173 already in use:** Vite will automatically prompt to use an alternative port
+  
+- **API connection error:** Ensure the backend is running on port 8080
+
+## Testing
+
+Run backend tests:
+```bash
+cd backend-api
+./mvnw test
+```
+
+## Building for Production
+
+### Backend
+```bash
+cd backend-api
+./mvnw clean package
+java -jar target/f25-team3-0.0.1-SNAPSHOT.jar
+```
+
+### Frontend
+```bash
+cd frontend
+npm run build
+```
+
+The production build will be in the `frontend/dist` directory.
