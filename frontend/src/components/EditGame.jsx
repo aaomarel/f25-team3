@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import Notification from './Notification';
 
 const locations = {
   'Basketball': [
@@ -21,6 +22,7 @@ const locations = {
 const EditGame = () => {
     const navigate = useNavigate();
     const { matchId } = useParams();
+    const [notification, setNotification] = useState(null);
     const [matchData, setMatchData] = useState({
         title: '',
         description: '',
@@ -66,9 +68,9 @@ const EditGame = () => {
                 setLoading(false);
             })
             .catch(error => {
-                console.error('Error fetching match:', error);
-                alert('Error loading match data');
-                navigate('/my-games');
+                console.error('Error loading match:', error);
+                setNotification({ message: 'Error loading match data', type: 'error' });
+                setTimeout(() => navigate('/my-games'), 2000);
             });
     }, [matchId, navigate]);
 
@@ -240,6 +242,14 @@ const EditGame = () => {
                         </button>
                     </div>
                 </form>
+
+            {notification && (
+                <Notification
+                    message={notification.message}
+                    type={notification.type}
+                    onClose={() => setNotification(null)}
+                />
+            )}
         </main>
     );
 };

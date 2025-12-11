@@ -37,7 +37,7 @@ const Login = () => {
 
   return (
     <main>
-      <h2>🔐 Login</h2>
+      <h2>Login</h2>
       {error && <p style={{ color: 'var(--danger)', textAlign: 'center', padding: '1rem', background: 'rgba(214, 48, 49, 0.1)', borderRadius: 'var(--radius)', fontWeight: '600' }}>{error}</p>}
       <form onSubmit={handleSubmit}>
         <label htmlFor="email">Email</label>

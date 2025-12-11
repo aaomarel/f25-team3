@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Notification from './Notification';
 
 const locations = {
   'Basketball': [
@@ -25,6 +26,7 @@ const playerLimits = {
 
 const CreateGame = () => {
     const navigate = useNavigate();
+    const [notification, setNotification] = useState(null);
     const [matchData, setMatchData] = useState({
         sport: 'Basketball',
         location: '',
@@ -80,14 +82,14 @@ const CreateGame = () => {
         const date = new Date(matchData.date);
         const day = date.getUTCDay();
         if (day === 0 || day === 6) {
-            alert('Please select a weekday (Monday-Friday).');
+            setNotification({ message: 'Please select a weekday (Monday-Friday).', type: 'warning' });
             return;
         }
 
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user || !user.id) {
-            alert('You must be logged in to create a game');
-            navigate('/login');
+            setNotification({ message: 'You must be logged in to create a game', type: 'warning' });
+            setTimeout(() => navigate('/login'), 2000);
             return;
         }
 
@@ -135,8 +137,8 @@ const CreateGame = () => {
                 <label>
                     Sport:
                     <select name="sport" value={matchData.sport} onChange={handleChange}>
-                        <option value="Basketball">🏀 Basketball</option>
-                        <option value="Soccer">⚽ Soccer</option>
+                        <option value="Basketball">Basketball</option>
+                        <option value="Soccer">Soccer</option>
                     </select>
                 </label>
 
@@ -180,6 +182,14 @@ const CreateGame = () => {
 
                 <button type="submit">Create Game</button>
             </form>
+
+            {notification && (
+                <Notification
+                    message={notification.message}
+                    type={notification.type}
+                    onClose={() => setNotification(null)}
+                />
+            )}
         </main>
     );
 };
