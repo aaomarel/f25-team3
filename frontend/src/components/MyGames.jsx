@@ -19,6 +19,15 @@ const MyGames = () => {
         return saved ? JSON.parse(saved) : [];
     });
 
+    const formatTime = (time) => {
+        if (!time) return '';
+        const [hours, minutes] = time.split(':');
+        const hour = parseInt(hours, 10);
+        const ampm = hour >= 12 ? 'PM' : 'AM';
+        const hour12 = hour % 12 || 12;
+        return `${hour12}:${minutes} ${ampm}`;
+    };
+
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user || !user.id) {
@@ -222,7 +231,7 @@ const MyGames = () => {
                                 </div>
                                 <p><strong>Location:</strong> {match.location}</p>
                                 <p><strong>Date:</strong> {match.date}</p>
-                                <p><strong>Time:</strong> {match.time}</p>
+                                <p><strong>Time:</strong> {formatTime(match.time)}</p>
                                 <p><strong>Players:</strong> {match.playersJoined || 0} / {match.playerLimit}</p>
                                 <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
                                     <button 
@@ -309,7 +318,7 @@ const MyGames = () => {
                                 </div>
                                 <p><strong>Location:</strong> {match.location}</p>
                                 <p><strong>Date:</strong> {match.date}</p>
-                                <p><strong>Time:</strong> {match.time}</p>
+                                <p><strong>Time:</strong> {formatTime(match.time)}</p>
                                 <p><strong>Players:</strong> {match.playersJoined || 0} / {match.playerLimit}</p>
                                 {match.creatorName && <p><strong>Hosted by:</strong> {match.creatorName}</p>}
                                 <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
@@ -387,7 +396,7 @@ const MyGames = () => {
                             <p><strong>Sport:</strong> {selectedMatch.sport}</p>
                             <p><strong>Location:</strong> {selectedMatch.location}</p>
                             <p><strong>Date:</strong> {selectedMatch.date}</p>
-                            <p><strong>Time:</strong> {selectedMatch.time}</p>
+                            <p><strong>Time:</strong> {formatTime(selectedMatch.time)}</p>
                             <p><strong>Players:</strong> {selectedMatch.playersJoined || 0} / {selectedMatch.playerLimit}</p>
                             {selectedMatch.description && (
                                 <p><strong>Description:</strong> {selectedMatch.description}</p>
