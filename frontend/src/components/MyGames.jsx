@@ -1,17 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Notification from './Notification';
+import LoadingSpinner from './LoadingSpinner';
+import ConfirmModal from './ConfirmModal';
 
 const MyGames = () => {
     const navigate = useNavigate();
     const [createdMatches, setCreatedMatches] = useState([]);
     const [joinedMatches, setJoinedMatches] = useState([]);
     const [activeTab, setActiveTab] = useState('created');
+    const [selectedMatch, setSelectedMatch] = useState(null);
+    const [notification, setNotification] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [confirmModal, setConfirmModal] = useState(null);
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
         if (!user || !user.id) {
-            alert('You must be logged in to view your games');
-            navigate('/login');
+            setNotification({ message: 'You must be logged in to view your games', type: 'warning' });
+            setTimeout(() => navigate('/login'), 2000);
             return;
         }
 
@@ -20,10 +27,17 @@ const MyGames = () => {
     }, [navigate]);
 
     const fetchCreatedMatches = (userId) => {
+        setLoading(true);
         fetch(`http://localhost:8080/api/matches/created-by/${userId}`)
             .then(response => response.json())
-            .then(data => setCreatedMatches(data))
-            .catch(error => console.error('Error fetching created matches:', error));
+            .then(data => {
+                setCreatedMatches(data);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching created matches:', error);
+                setLoading(false);
+            });
     };
 
     const fetchJoinedMatches = (userId) => {
@@ -34,54 +48,58 @@ const MyGames = () => {
     };
 
     const handleCancelMatch = (matchId) => {
-        if (!window.confirm('Are you sure you want to cancel this match?')) {
-            return;
-        }
-
-        fetch(`http://localhost:8080/api/matches/${matchId}`, {
-            method: 'DELETE',
-        })
-        .then(response => {
-            if (response.ok) {
-                alert('Match cancelled successfully');
-                const user = JSON.parse(localStorage.getItem('user'));
-                fetchCreatedMatches(user.id);
-            } else {
-                alert('Error cancelling match');
+        setConfirmModal({
+            message: 'Are you sure you want to cancel this match?',
+            onConfirm: () => {
+                setConfirmModal(null);
+                fetch(`http://localhost:8080/api/matches/${matchId}`, {
+                    method: 'DELETE',
+                })
+                .then(response => {
+                    if (response.ok) {
+                        setNotification({ message: 'Match cancelled successfully', type: 'success' });
+                        const user = JSON.parse(localStorage.getItem('user'));
+                        fetchCreatedMatches(user.id);
+                    } else {
+                        setNotification({ message: 'Error cancelling match', type: 'error' });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    setNotification({ message: 'Error cancelling match', type: 'error' });
+                });
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error cancelling match');
         });
     };
 
     const handleLeaveMatch = (matchId) => {
-        if (!window.confirm('Are you sure you want to leave this match?')) {
-            return;
-        }
-
-        const user = JSON.parse(localStorage.getItem('user'));
-        fetch(`http://localhost:8080/api/matches/${matchId}/leave?userId=${user.id}`, {
-            method: 'DELETE',
-        })
-        .then(response => {
-            if (response.ok) {
-                alert('Left match successfully');
-                fetchJoinedMatches(user.id);
-            } else {
-                alert('Error leaving match');
+        setConfirmModal({
+            message: 'Are you sure you want to leave this match?',
+            onConfirm: () => {
+                setConfirmModal(null);
+                const user = JSON.parse(localStorage.getItem('user'));
+                fetch(`http://localhost:8080/api/matches/${matchId}/leave?userId=${user.id}`, {
+                    method: 'DELETE',
+                })
+                .then(response => {
+                    if (response.ok) {
+                        setNotification({ message: 'Left match successfully', type: 'success' });
+                        fetchJoinedMatches(user.id);
+                    } else {
+                        setNotification({ message: 'Error leaving match', type: 'error' });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    setNotification({ message: 'Error leaving match', type: 'error' });
+                });
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error leaving match');
         });
     };
 
     return (
         <main>
-            <h2>📋 My Games</h2>
+            <h2>My Games</h2>
 
             <div className="tab-buttons">
                 <button 
@@ -99,51 +117,268 @@ const MyGames = () => {
             </div>
 
             <section>
-                {activeTab === 'created' && (
+                {loading ? (
+                    <LoadingSpinner />
+                ) : activeTab === 'created' && (
                     createdMatches.length === 0 ? (
                         <div className="empty-state">
+                            <div style={{ fontSize: '3rem', marginBottom: '1rem', opacity: 0.6 }}>+</div>
                             <p>You haven't created any games yet.</p>
                             <p><a href="/create">Create one now!</a></p>
                         </div>
                     ) : (
                         createdMatches.map(match => (
                             <div key={match.id} className="game-card">
-                                <h3>{match.sport === 'Basketball' ? '🏀' : '⚽'} {match.sport} Game</h3>
-                                <p><strong>📍 Location:</strong> {match.location}</p>
-                                <p><strong>📅 Date:</strong> {match.date}</p>
-                                <p><strong>⏰ Time:</strong> {match.time}</p>
-                                <p><strong>📊 Status:</strong> {match.status}</p>
-                                <p><strong>👥 Players:</strong> {match.playersJoined || 0} / {match.playerLimit}</p>
-                                <div style={{ display: 'flex', gap: '10px' }}>
-                                    <button className="btn-secondary" onClick={() => navigate(`/edit/${match.id}`)}>✏️ Edit</button>
-                                    <button className="btn" onClick={() => handleCancelMatch(match.id)}>❌ Cancel Match</button>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                    <h3>{match.sport} Game</h3>
+                                    <span style={{
+                                        padding: '4px 12px',
+                                        borderRadius: '12px',
+                                        fontSize: '0.8rem',
+                                        fontWeight: '600',
+                                        backgroundColor: match.status === 'SCHEDULED' ? '#e8f5e9' : match.status === 'STARTED' ? '#fff3e0' : '#ffebee',
+                                        color: match.status === 'SCHEDULED' ? '#2e7d32' : match.status === 'STARTED' ? '#ef6c00' : '#c62828'
+                                    }}>
+                                        {match.status}
+                                    </span>
+                                </div>
+                                <p><strong>Location:</strong> {match.location}</p>
+                                <p><strong>Date:</strong> {match.date}</p>
+                                <p><strong>Time:</strong> {match.time}</p>
+                                <p><strong>Players:</strong> {match.playersJoined || 0} / {match.playerLimit}</p>
+                                <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                                    <button 
+                                        onClick={() => setSelectedMatch(match)}
+                                        style={{
+                                            padding: '8px 16px',
+                                            backgroundColor: '#2196F3',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        View Details
+                                    </button>
+                                    <button 
+                                        onClick={() => navigate(`/edit/${match.id}`)}
+                                        style={{
+                                            padding: '8px 16px',
+                                            backgroundColor: '#FF9800',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        Edit
+                                    </button>
+                                    <button 
+                                        onClick={() => handleCancelMatch(match.id)}
+                                        style={{
+                                            padding: '8px 16px',
+                                            backgroundColor: '#f44336',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        Cancel Match
+                                    </button>
                                 </div>
                             </div>
                         ))
                     )
                 )}
 
-                {activeTab === 'joined' && (
+                {!loading && activeTab === 'joined' && (
                     joinedMatches.length === 0 ? (
                         <div className="empty-state">
+                            <div style={{ fontSize: '3rem', marginBottom: '1rem', opacity: 0.6 }}>↗</div>
                             <p>You haven't joined any games yet.</p>
                             <p><a href="/browse">Browse games!</a></p>
                         </div>
                     ) : (
                         joinedMatches.map(match => (
                             <div key={match.id} className="game-card">
-                                <h3>{match.sport === 'Basketball' ? '🏀' : '⚽'} {match.sport} Game</h3>
-                                <p><strong>📍 Location:</strong> {match.location}</p>
-                                <p><strong>📅 Date:</strong> {match.date}</p>
-                                <p><strong>⏰ Time:</strong> {match.time}</p>
-                                <p><strong>📊 Status:</strong> {match.status}</p>
-                                <p><strong>👥 Players:</strong> {match.playersJoined || 0} / {match.playerLimit}</p>
-                                <button className="btn" onClick={() => handleLeaveMatch(match.id)}>🚪 Leave Match</button>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                    <h3>{match.sport} Game</h3>
+                                    <span style={{
+                                        padding: '4px 12px',
+                                        borderRadius: '12px',
+                                        fontSize: '0.8rem',
+                                        fontWeight: '600',
+                                        backgroundColor: match.status === 'SCHEDULED' ? '#e8f5e9' : match.status === 'STARTED' ? '#fff3e0' : '#ffebee',
+                                        color: match.status === 'SCHEDULED' ? '#2e7d32' : match.status === 'STARTED' ? '#ef6c00' : '#c62828'
+                                    }}>
+                                        {match.status}
+                                    </span>
+                                </div>
+                                <p><strong>Location:</strong> {match.location}</p>
+                                <p><strong>Date:</strong> {match.date}</p>
+                                <p><strong>Time:</strong> {match.time}</p>
+                                <p><strong>Players:</strong> {match.playersJoined || 0} / {match.playerLimit}</p>
+                                {match.creatorName && <p><strong>Hosted by:</strong> {match.creatorName}</p>}
+                                <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                                    <button 
+                                        onClick={() => setSelectedMatch(match)}
+                                        style={{
+                                            padding: '8px 16px',
+                                            backgroundColor: '#2196F3',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        View Details
+                                    </button>
+                                    <button 
+                                        onClick={() => handleLeaveMatch(match.id)}
+                                        style={{
+                                            padding: '8px 16px',
+                                            backgroundColor: '#f44336',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer'
+                                        }}
+                                    >
+                                        Leave Match
+                                    </button>
+                                </div>
                             </div>
                         ))
                     )
                 )}
             </section>
+
+            {selectedMatch && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    zIndex: 1000
+                }} onClick={() => setSelectedMatch(null)}>
+                    <div style={{
+                        backgroundColor: 'white',
+                        padding: '2rem',
+                        borderRadius: '8px',
+                        maxWidth: '500px',
+                        width: '90%',
+                        maxHeight: '80vh',
+                        overflow: 'auto'
+                    }} onClick={(e) => e.stopPropagation()}>
+                        <h2>{selectedMatch.title || `${selectedMatch.sport} Game`}</h2>
+                        <div style={{ marginTop: '1rem' }}>
+                            <p><strong>Sport:</strong> {selectedMatch.sport}</p>
+                            <p><strong>Location:</strong> {selectedMatch.location}</p>
+                            <p><strong>Date:</strong> {selectedMatch.date}</p>
+                            <p><strong>Time:</strong> {selectedMatch.time}</p>
+                            <p><strong>Players:</strong> {selectedMatch.playersJoined || 0} / {selectedMatch.playerLimit}</p>
+                            {selectedMatch.description && (
+                                <p><strong>Description:</strong> {selectedMatch.description}</p>
+                            )}
+                            <p><strong>Status:</strong> {selectedMatch.status}</p>
+                        </div>
+                        <div style={{ display: 'flex', gap: '10px', marginTop: '1.5rem' }}>
+                            {activeTab === 'created' ? (
+                                <>
+                                    <button 
+                                        onClick={() => {
+                                            setSelectedMatch(null);
+                                            navigate(`/edit/${selectedMatch.id}`);
+                                        }}
+                                        style={{
+                                            padding: '10px 20px',
+                                            backgroundColor: '#2196F3',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer',
+                                            flex: 1
+                                        }}
+                                    >
+                                        Edit
+                                    </button>
+                                    <button 
+                                        onClick={() => {
+                                            setSelectedMatch(null);
+                                            handleCancelMatch(selectedMatch.id);
+                                        }}
+                                        style={{
+                                            padding: '10px 20px',
+                                            backgroundColor: '#f44336',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer',
+                                            flex: 1
+                                        }}
+                                    >
+                                        Cancel Match
+                                    </button>
+                                </>
+                            ) : (
+                                <button 
+                                    onClick={() => {
+                                        setSelectedMatch(null);
+                                        handleLeaveMatch(selectedMatch.id);
+                                    }}
+                                    style={{
+                                        padding: '10px 20px',
+                                        backgroundColor: '#f44336',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '4px',
+                                        cursor: 'pointer',
+                                        flex: 1
+                                    }}
+                                >
+                                    Leave Match
+                                </button>
+                            )}
+                            <button 
+                                onClick={() => setSelectedMatch(null)}
+                                style={{
+                                    padding: '10px 20px',
+                                    backgroundColor: '#666',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '4px',
+                                    cursor: 'pointer',
+                                    flex: 1
+                                }}
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {notification && (
+                <Notification
+                    message={notification.message}
+                    type={notification.type}
+                    onClose={() => setNotification(null)}
+                />
+            )}
+
+            {confirmModal && (
+                <ConfirmModal
+                    message={confirmModal.message}
+                    onConfirm={confirmModal.onConfirm}
+                    onCancel={() => setConfirmModal(null)}
+                />
+            )}
         </main>
     );
 };

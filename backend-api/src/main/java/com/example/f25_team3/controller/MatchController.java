@@ -1,5 +1,6 @@
 package com.example.f25_team3.controller;
 
+import com.example.f25_team3.dto.JoinMatchRequest;
 import com.example.f25_team3.dto.MatchRequest;
 import com.example.f25_team3.dto.MatchResponse;
 import com.example.f25_team3.dto.MatchUpdateRequest;
@@ -91,6 +92,12 @@ public class MatchController {
     public ResponseEntity<Void> cancelMatch(@PathVariable Long id) {
         matchService.cancelMatch(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/join")
+    public ResponseEntity<Void> joinMatch(@PathVariable Long id, @RequestBody JoinMatchRequest request) {
+        matchPlayerService.joinMatch(id, request.getUserId());
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{matchId}/leave")

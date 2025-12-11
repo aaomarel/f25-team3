@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -44,21 +45,22 @@ const Header = () => {
   return (
     <header>
       <h1>
-        <Link to={ "/dashboard" }>MatchMaker</Link>
+        <Link to={user ? "/dashboard" : "/"}>MatchMaker</Link>
       </h1>
       <nav>
         {user ? (
           <>
-            <Link to="/dashboard">Dashboard</Link>
-            <Link to="/browse">Browse Games</Link>
-            <Link to="/create">Create Game</Link>
+            <Link to="/dashboard" className={location.pathname === '/dashboard' ? 'active' : ''}>Dashboard</Link>
+            <Link to="/browse" className={location.pathname === '/browse' ? 'active' : ''}>Browse Games</Link>
+            <Link to="/create" className={location.pathname === '/create' ? 'active' : ''}>Create Game</Link>
+            <Link to="/my-games" className={location.pathname === '/my-games' ? 'active' : ''}>My Games</Link>
             <button onClick={handleLogout} style={{background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', fontSize: 'inherit', padding: 0}}>Logout</button>
           </>
         ) : (
           <>
-            <Link to="/dashboard">Home</Link>
-            <Link to="/login">Login</Link>
-            <Link to="/signup">Sign Up</Link>
+            <Link to="/" className={location.pathname === '/' ? 'active' : ''}>Home</Link>
+            <Link to="/login" className={location.pathname === '/login' ? 'active' : ''}>Login</Link>
+            <Link to="/signup" className={location.pathname === '/signup' ? 'active' : ''}>Sign Up</Link>
           </>
         )}
       </nav>

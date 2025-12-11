@@ -38,7 +38,7 @@ const SignUp = () => {
 
   return (
     <main>
-      <h2>✨ Sign Up</h2>
+      <h2>Sign Up</h2>
       {error && <p style={{ color: 'var(--danger)', textAlign: 'center', padding: '1rem', background: 'rgba(214, 48, 49, 0.1)', borderRadius: 'var(--radius)', fontWeight: '600' }}>{error}</p>}
       {success && <p style={{ color: 'var(--success)', textAlign: 'center', padding: '1rem', background: 'rgba(0, 184, 148, 0.1)', borderRadius: 'var(--radius)', fontWeight: '600' }}>Registration successful! Redirecting to login...</p>}
       <form onSubmit={handleSubmit}>

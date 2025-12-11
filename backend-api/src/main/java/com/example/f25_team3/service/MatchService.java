@@ -7,8 +7,6 @@ import com.example.f25_team3.repository.MatchPlayerRepository;
 import com.example.f25_team3.repository.MatchRepository;
 import com.example.f25_team3.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -51,7 +49,7 @@ public class MatchService {
         if (sportFilter.isPresent()) {
             return matchRepository.findBySportIgnoreCaseAndStatus(sportFilter.get(), MatchStatus.SCHEDULED);
         }
-        return matchRepository.findUpcomingByStatus(MatchStatus.SCHEDULED, LocalDate.now(), LocalTime.now());
+        return matchRepository.findByStatus(MatchStatus.SCHEDULED);
     }
 
     public List<Match> getMatchesCreatedByUser(Integer userId) {
