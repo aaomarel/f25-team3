@@ -53,7 +53,7 @@ public class MatchService {
     }
 
     public List<Match> getMatchesCreatedByUser(Integer userId) {
-        return matchRepository.findByCreatorId(userId);
+        return matchRepository.findByCreatorIdOrderByDateAscTimeAsc(userId);
     }
 
     @Transactional

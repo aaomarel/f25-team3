@@ -13,7 +13,7 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
 
     List<Match> findBySportIgnoreCaseAndStatus(String sport, MatchStatus status);
 
-    List<Match> findByCreatorId(Integer creatorId);
+    List<Match> findByCreatorIdOrderByDateAscTimeAsc(Integer creatorId);
 
     @Query("SELECT m FROM Match m WHERE m.status = :status AND (m.date > :date OR (m.date = :date AND m.time >= :time))")
     List<Match> findUpcomingByStatus(@Param("status") MatchStatus status, @Param("date") java.time.LocalDate date, @Param("time") java.time.LocalTime time);

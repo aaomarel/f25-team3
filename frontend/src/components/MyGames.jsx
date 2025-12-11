@@ -13,6 +13,11 @@ const MyGames = () => {
     const [notification, setNotification] = useState(null);
     const [loading, setLoading] = useState(true);
     const [confirmModal, setConfirmModal] = useState(null);
+    const [showPastGames, setShowPastGames] = useState(false);
+    const [hiddenGames, setHiddenGames] = useState(() => {
+        const saved = localStorage.getItem('hiddenGames');
+        return saved ? JSON.parse(saved) : [];
+    });
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem('user'));
@@ -97,6 +102,41 @@ const MyGames = () => {
         });
     };
 
+    const isGamePast = (match) => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const gameDate = new Date(match.date);
+        return gameDate < today || match.status === 'CANCELLED' || match.status === 'COMPLETED';
+    };
+
+    const hideGame = (matchId) => {
+        const newHiddenGames = [...hiddenGames, matchId];
+        setHiddenGames(newHiddenGames);
+        localStorage.setItem('hiddenGames', JSON.stringify(newHiddenGames));
+        setNotification({ message: 'Game hidden from view', type: 'success' });
+    };
+
+    const unhideAllGames = () => {
+        setHiddenGames([]);
+        localStorage.removeItem('hiddenGames');
+        setNotification({ message: 'All hidden games restored', type: 'success' });
+    };
+
+    const filterMatches = (matches) => {
+        return matches.filter(match => {
+            // Always hide games that are in hiddenGames array
+            if (hiddenGames.includes(match.id)) return false;
+            // If showPastGames is false, hide past/cancelled/completed games
+            if (!showPastGames && isGamePast(match)) return false;
+            return true;
+        });
+    };
+
+    const filteredCreatedMatches = filterMatches(createdMatches);
+    const filteredJoinedMatches = filterMatches(joinedMatches);
+    const hiddenCount = createdMatches.filter(m => hiddenGames.includes(m.id)).length + 
+                        joinedMatches.filter(m => hiddenGames.includes(m.id)).length;
+
     return (
         <main>
             <h2>My Games</h2>
@@ -116,18 +156,56 @@ const MyGames = () => {
                 </button>
             </div>
 
+            <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center',
+                marginBottom: '1rem',
+                padding: '0.75rem 1rem',
+                backgroundColor: '#f5f5f5',
+                borderRadius: '8px',
+                flexWrap: 'wrap',
+                gap: '0.5rem'
+            }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                    <input 
+                        type="checkbox" 
+                        checked={showPastGames} 
+                        onChange={(e) => setShowPastGames(e.target.checked)}
+                        style={{ width: '16px', height: '16px' }}
+                    />
+                    Show past & cancelled games
+                </label>
+                {hiddenCount > 0 && (
+                    <button
+                        onClick={unhideAllGames}
+                        style={{
+                            padding: '6px 12px',
+                            backgroundColor: '#757575',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            fontSize: '0.85rem'
+                        }}
+                    >
+                        Restore {hiddenCount} hidden game{hiddenCount > 1 ? 's' : ''}
+                    </button>
+                )}
+            </div>
+
             <section>
                 {loading ? (
                     <LoadingSpinner />
                 ) : activeTab === 'created' && (
-                    createdMatches.length === 0 ? (
+                    filteredCreatedMatches.length === 0 ? (
                         <div className="empty-state">
                             <div style={{ fontSize: '3rem', marginBottom: '1rem', opacity: 0.6 }}>+</div>
-                            <p>You haven't created any games yet.</p>
-                            <p><a href="/create">Create one now!</a></p>
+                            <p>{createdMatches.length === 0 ? "You haven't created any games yet." : "No games to show with current filters."}</p>
+                            {createdMatches.length === 0 && <p><a href="/create">Create one now!</a></p>}
                         </div>
                     ) : (
-                        createdMatches.map(match => (
+                        filteredCreatedMatches.map(match => (
                             <div key={match.id} className="game-card">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                     <h3>{match.sport} Game</h3>
@@ -186,6 +264,20 @@ const MyGames = () => {
                                     >
                                         Cancel Match
                                     </button>
+                                    <button 
+                                        onClick={() => hideGame(match.id)}
+                                        style={{
+                                            padding: '8px 16px',
+                                            backgroundColor: '#9e9e9e',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer'
+                                        }}
+                                        title="Hide this game from your list"
+                                    >
+                                        Hide
+                                    </button>
                                 </div>
                             </div>
                         ))
@@ -193,14 +285,14 @@ const MyGames = () => {
                 )}
 
                 {!loading && activeTab === 'joined' && (
-                    joinedMatches.length === 0 ? (
+                    filteredJoinedMatches.length === 0 ? (
                         <div className="empty-state">
                             <div style={{ fontSize: '3rem', marginBottom: '1rem', opacity: 0.6 }}>↗</div>
-                            <p>You haven't joined any games yet.</p>
-                            <p><a href="/browse">Browse games!</a></p>
+                            <p>{joinedMatches.length === 0 ? "You haven't joined any games yet." : "No games to show with current filters."}</p>
+                            {joinedMatches.length === 0 && <p><a href="/browse">Browse games!</a></p>}
                         </div>
                     ) : (
-                        joinedMatches.map(match => (
+                        filteredJoinedMatches.map(match => (
                             <div key={match.id} className="game-card">
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                     <h3>{match.sport} Game</h3>
@@ -246,6 +338,20 @@ const MyGames = () => {
                                         }}
                                     >
                                         Leave Match
+                                    </button>
+                                    <button 
+                                        onClick={() => hideGame(match.id)}
+                                        style={{
+                                            padding: '8px 16px',
+                                            backgroundColor: '#9e9e9e',
+                                            color: 'white',
+                                            border: 'none',
+                                            borderRadius: '4px',
+                                            cursor: 'pointer'
+                                        }}
+                                        title="Hide this game from your list"
+                                    >
+                                        Hide
                                     </button>
                                 </div>
                             </div>
